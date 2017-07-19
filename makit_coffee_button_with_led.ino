@@ -30,7 +30,7 @@ void setup() {
 void loop() {
   startTime = millis();
 
-  lcdprinttime(startTime, previousMillis);
+  lcdprinttimereverse(startTime, previousMillis);
 
   if ((unsigned long)(startTime - previousMillis) <= interval) {
     digitalWrite(ledPinGreen, HIGH);
@@ -59,6 +59,26 @@ void lcdprinttime(long startTime, unsigned long previousMillis) {
   }
   lcd.print((unsigned long)(startTime - previousMillis)/1000 % 60); //seconds
 }
+
+void lcdprinttimereverse(long startTime, unsigned long previousMillis) {
+  lcd.clear();
+  lcd.print((long)(19 - (startTime - previousMillis)/3600000)); //hours
+  lcd.print(":");
+
+  if ((unsigned long)(startTime - previousMillis)/60000 % 60 > 50) {
+    lcd.print(0);
+  }
+  lcd.print((long)(59 - (startTime - previousMillis)/60000 % 60)); //minutes
+  lcd.print(":");
+
+
+
+  if ((unsigned long)(startTime - previousMillis)/1000 % 60 >49) {
+    lcd.print(0);
+  }
+  lcd.print((unsigned long)(59 - (startTime - previousMillis)/1000 % 60)); //seconds
+}
+
 
 void button_press_action() {
   previousMillis = startTime;
