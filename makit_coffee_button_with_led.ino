@@ -8,6 +8,7 @@ int buttonState = 0;
 
 long startTime;
 unsigned long previousMillis=0;
+unsigned long actualInterval=0;
 //long interval = 86400000; // 24 hours
 long interval = 72000000; // 20 hours
 //long interval = 3600000 ; // 1 hour
@@ -29,10 +30,10 @@ void setup() {
 
 void loop() {
   startTime = millis();
+  actualInterval = startTime - previousMillis;
+  lcdprinttimereverse();
 
-  lcdprinttimereverse(startTime, previousMillis);
-
-  if ((unsigned long)(startTime - previousMillis) <= interval) {
+  if (actualInterval <= interval) {
     digitalWrite(ledPinGreen, HIGH);
     digitalWrite(ledPinRed, LOW);
   } else {
@@ -47,36 +48,34 @@ void loop() {
 
 void lcdprinttime(long startTime, unsigned long previousMillis) {
   lcd.clear();
-  lcd.print((long)(startTime - previousMillis)/3600000); //hours
+  lcd.print((long)(actualInterval)/3600000); //hours
   lcd.print(":");
-  if ((unsigned long)(startTime - previousMillis)/60000 % 60 < 10) {
+  if ((unsigned long)(actualInterval)/60000 % 60 < 10) {
     lcd.print(0);
   }
-  lcd.print((long)(startTime - previousMillis)/60000 % 60); //minutes
+  lcd.print((long)(actualInterval)/60000 % 60); //minutes
   lcd.print(":");
-  if ((unsigned long)(startTime - previousMillis)/1000 % 60 < 10) {
+  if ((unsigned long)(actualInterval)/1000 % 60 < 10) {
     lcd.print(0);
   }
-  lcd.print((unsigned long)(startTime - previousMillis)/1000 % 60); //seconds
+  lcd.print((unsigned long)(actualInterval)/1000 % 60); //seconds
 }
 
-void lcdprinttimereverse(long startTime, unsigned long previousMillis) {
+void lcdprinttimereverse() {
   lcd.clear();
-  lcd.print((long)(19 - (startTime - previousMillis)/3600000)); //hours
+  lcd.print((long)(19 - (actualInterval)/3600000)); //hours
   lcd.print(":");
 
-  if ((unsigned long)(startTime - previousMillis)/60000 % 60 > 50) {
+  if ((unsigned long)(actualInterval)/60000 % 60 > 50) {
     lcd.print(0);
   }
-  lcd.print((long)(59 - (startTime - previousMillis)/60000 % 60)); //minutes
+  lcd.print((long)(59 - (actualInterval)/60000 % 60)); //minutes
   lcd.print(":");
 
-
-
-  if ((unsigned long)(startTime - previousMillis)/1000 % 60 >49) {
+  if ((unsigned long)(actualInterval)/1000 % 60 >49) {
     lcd.print(0);
   }
-  lcd.print((unsigned long)(59 - (startTime - previousMillis)/1000 % 60)); //seconds
+  lcd.print((unsigned long)(59 - (actualInterval)/1000 % 60)); //seconds
 }
 
 
