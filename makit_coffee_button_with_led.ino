@@ -10,9 +10,10 @@ long startTime;
 unsigned long previousMillis=0;
 unsigned long actualInterval=0;
 //long interval = 86400000; // 24 hours
-long interval = 72000000; // 20 hours
+//long interval = 72000000; // 20 hours
 //long interval = 3600000 ; // 1 hour
-//long interval = 10000 ; // 10 sec
+long interval = 10000 ; // 10 sec
+//long interval = 1000 ; // 1 sec
 
 LiquidCrystal_I2C lcd(0x3F, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);
 
@@ -31,14 +32,15 @@ void setup() {
 void loop() {
   startTime = millis();
   actualInterval = startTime - previousMillis;
-  lcdprinttimereverse();
 
   if (actualInterval <= interval) {
+    lcdprinttimereverse();
     digitalWrite(ledPinGreen, HIGH);
     digitalWrite(ledPinRed, LOW);
   } else {
     digitalWrite(ledPinGreen, LOW);
     digitalWrite(ledPinRed, HIGH);
+    lcdprintwarning();
   }
 
   buttonState = digitalRead(buttonPin);
@@ -64,8 +66,9 @@ void lcdprinttime(long startTime, unsigned long previousMillis) {
 void lcdprinttimereverse() {
   lcd.clear();
   lcd.setCursor(0,0) ;
-  lcd.print("Until CRASH:");
+  lcd.print("   Until CRASH");
   lcd.setCursor(0,1) ;
+  lcd.print("    ");
   lcd.print((long)(19 - (actualInterval)/3600000)); //hours
   lcd.print(":");
 
@@ -80,7 +83,17 @@ void lcdprinttimereverse() {
   }
   lcd.print((unsigned long)(59 - (actualInterval)/1000 % 60)); //seconds
 }
+void lcdprintwarning() {
+  lcd.noBacklight();
+  lcd.clear();
+  lcd.setCursor(0,0) ;
+  lcd.print("UWAGA! UWAGA!");
+  lcd.setCursor(0,1) ;
+  lcd.print("Clean machine");
 
+  delay(1000);
+  lcd.backlight();
+}
 
 void button_press_action() {
   previousMillis = startTime;
