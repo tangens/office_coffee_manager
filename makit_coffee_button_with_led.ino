@@ -63,6 +63,9 @@ void lcdprinttime(long startTime, unsigned long previousMillis) {
 
 void lcdprinttimereverse() {
   lcd.clear();
+  lcd.setCursor(0,0) ;
+  lcd.print("Until CRASH:");
+  lcd.setCursor(0,1) ;
   lcd.print((long)(19 - (actualInterval)/3600000)); //hours
   lcd.print(":");
 
